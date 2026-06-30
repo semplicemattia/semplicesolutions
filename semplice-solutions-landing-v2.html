@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="it" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Semplice Solutions — L'Intelligenza Artificiale, resa Semplice.</title>
+  <meta name="description" content="Semplice Solutions: il sistema unificato per portare l'Intelligenza Artificiale nel tuo business. Sviluppo, consulenza strategica e formazione." />
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            electric: { DEFAULT: '#0047FF', 600: '#0040E6', 700: '#0036C2', 50: '#EEF3FF', 100: '#DCE6FF' },
+            ink: '#16161A',
+            mist: '#F6F8FC',
+          },
+          fontFamily: { sans: ['Inter', 'ui-sans-serif', 'system-ui', 'sans-serif'] },
+          boxShadow: {
+            soft: '0 12px 45px -14px rgba(0,71,255,0.28)',
+            card: '0 6px 30px -12px rgba(22,22,26,0.12)',
+            ring: '0 0 0 1px rgba(22,22,26,0.06)',
+          },
+          borderRadius: { '4xl': '2rem' },
+        },
+      },
+    };
+  </script>
+
+  <style>
+    .dot-pattern { background-image: radial-gradient(currentColor 1.5px, transparent 1.5px); background-size: 22px 22px; }
+    .fade-mask-b { -webkit-mask-image: linear-gradient(to bottom, black 55%, transparent); mask-image: linear-gradient(to bottom, black 55%, transparent); }
+    .reveal { opacity: 0; transform: translateY(26px); transition: opacity .7s cubic-bezier(.16,1,.3,1), transform .7s cubic-bezier(.16,1,.3,1); }
+    .reveal.in { opacity: 1; transform: none; }
+    ::selection { background: #0047FF; color: #fff; }
+    html { scroll-padding-top: 120px; }
+
+    /* Marquee */
+    @keyframes marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+    .marquee-track { display: flex; width: max-content; animation: marquee 28s linear infinite; }
+    .marquee:hover .marquee-track { animation-play-state: paused; }
+
+    /* Floating animation for hero mockup */
+    @keyframes floaty { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+    .floaty { animation: floaty 6s ease-in-out infinite; }
+
+    .tab-active { background:#16161A; color:#fff; }
+  </style>
+</head>
+
+<body class="font-sans text-ink bg-white antialiased">
+
+  <!-- ===================== ANNOUNCEMENT BAR ===================== -->
+  <div id="annBar" class="relative z-[60] bg-ink text-white">
+    <div class="mx-auto flex max-w-7xl items-center justify-center gap-3 px-6 py-2.5 text-sm">
+      <span class="hidden sm:inline-flex items-center gap-1.5 rounded-full bg-electric px-2.5 py-0.5 text-xs font-semibold">Novità 2026</span>
+      <p class="text-center text-white/85">
+        <span class="font-semibold text-white">Allbora</span> è ora <span class="font-semibold text-white">Semplice Solutions</span> — l'AI resa semplice per il tuo business.
+      </p>
+      <a href="#contatti" class="hidden items-center gap-1 font-semibold text-electric-100 hover:text-white md:inline-flex">Scopri di più <i data-lucide="arrow-right" class="h-3.5 w-3.5"></i></a>
+      <button onclick="document.getElementById('annBar').remove()" class="absolute right-4 top-1/2 -translate-y-1/2 text-white/60 hover:text-white" aria-label="Chiudi"><i data-lucide="x" class="h-4 w-4"></i></button>
+    </div>
+  </div>
+
+  <!-- ===================== NAVBAR ===================== -->
+  <header class="sticky top-0 z-50 border-b border-gray-100 bg-white/85 backdrop-blur-md" id="top">
+    <div class="mx-auto max-w-7xl px-6 lg:px-8">
+      <nav class="flex items-center justify-between py-4">
+        <a href="#top" class="flex items-center gap-2 text-lg font-extrabold tracking-tight">
+          <span class="grid h-8 w-8 place-items-center rounded-lg bg-electric text-white shadow-soft"><i data-lucide="sparkles" class="h-4 w-4"></i></span>
+          <span>Semplice<span class="text-electric">.</span>Solutions</span>
+        </a>
+
+        <div class="hidden items-center gap-8 md:flex">
+          <a href="#servizi" class="text-sm font-medium text-gray-600 transition hover:text-electric">Servizi</a>
+          <a href="#perche" class="text-sm font-medium text-gray-600 transition hover:text-electric">Perché Sceglierci</a>
+          <a href="#risultati" class="text-sm font-medium text-gray-600 transition hover:text-electric">Risultati</a>
+          <a href="#contatti" class="text-sm font-medium text-gray-600 transition hover:text-electric">Contatti</a>
+        </div>
+
+        <div class="flex items-center gap-3">
+          <a href="#contatti" class="hidden text-sm font-semibold text-ink transition hover:text-electric sm:block">Accedi</a>
+          <a href="#contatti" class="inline-flex items-center gap-2 rounded-full bg-electric px-5 py-2.5 text-sm font-semibold text-white shadow-soft transition-all duration-300 hover:-translate-y-0.5 hover:bg-electric-600">
+            Inizia Oggi <i data-lucide="arrow-right" class="h-4 w-4"></i>
+          </a>
+          <button id="menuBtn" class="grid h-10 w-10 place-items-center rounded-lg md:hidden" aria-label="Menu"><i data-lucide="menu" class="h-6 w-6"></i></button>
+        </div>
+      </nav>
+
+      <div id="mobileMenu" class="hidden pb-4 md:hidden">
+        <div class="space-y-1 rounded-2xl border border-gray-100 bg-white p-3 shadow-card">
+          <a href="#servizi" class="block rounded-lg px-4 py-3 text-sm font-medium text-gray-700 hover:bg-electric-50 hover:text-electric">Servizi</a>
+          <a href="#perche" class="block rounded-lg px-4 py-3 text-sm font-medium text-gray-700 hover:bg-electric-50 hover:text-electric">Perché Sceglierci</a>
+          <a href="#risultati" class="block rounded-lg px-4 py-3 text-sm font-medium text-gray-700 hover:bg-electric-50 hover:text-electric">Risultati</a>
+          <a href="#contatti" class="block rounded-lg px-4 py-3 text-sm font-medium text-gray-700 hover:bg-electric-50 hover:text-electric">Contatti</a>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- ===================== HERO ===================== -->
+  <section class="relative overflow-hidden bg-gradient-to-b from-mist to-white pt-20 pb-24 lg:pt-24">
+    <div class="pointer-events-none absolute -right-16 top-10 h-80 w-80 text-electric/15 dot-pattern fade-mask-b"></div>
+    <div class="pointer-events-none absolute left-1/2 -top-24 h-[500px] w-[900px] -translate-x-1/2 rounded-full bg-electric/5 blur-3xl"></div>
+
+    <div class="relative mx-auto max-w-7xl px-6 lg:px-8">
+      <div class="grid items-center gap-14 lg:grid-cols-2">
+        <!-- Copy -->
+        <div>
+          <span class="reveal inline-flex items-center gap-2 rounded-full border border-electric-100 bg-electric-50 px-4 py-1.5 text-xs font-semibold uppercase tracking-wide text-electric">
+            <span class="relative flex h-2 w-2"><span class="absolute inline-flex h-full w-full animate-ping rounded-full bg-electric opacity-60"></span><span class="relative inline-flex h-2 w-2 rounded-full bg-electric"></span></span>
+            AI · Consulenza · Formazione
+          </span>
+
+          <h1 class="reveal mt-6 text-4xl font-extrabold leading-[1.05] tracking-tight text-ink sm:text-6xl lg:text-[4rem]">
+            L'Intelligenza Artificiale,<br />
+            <span class="text-electric">resa Semplice.</span>
+          </h1>
+
+          <p class="reveal mt-7 max-w-xl text-lg leading-relaxed text-gray-600">
+            Trasformiamo idee innovative in soluzioni concrete per ottimizzare i processi aziendali e migliorare le tue decisioni strategiche. L'AI non deve essere un concetto astratto, ma un motore reale di crescita per il tuo business.
+          </p>
+
+          <div class="reveal mt-9 flex flex-col gap-3 sm:flex-row">
+            <a href="#contatti" class="group inline-flex items-center justify-center gap-2 rounded-full bg-electric px-7 py-4 text-base font-semibold text-white shadow-soft transition-all duration-300 hover:-translate-y-0.5 hover:bg-electric-600">
+              Inizia Oggi la tua Trasformazione
+              <i data-lucide="arrow-right" class="h-5 w-5 transition-transform group-hover:translate-x-1"></i>
+            </a>
+            <a href="#servizi" class="inline-flex items-center justify-center gap-2 rounded-full border border-gray-200 bg-white px-7 py-4 text-base font-semibold text-ink transition-all duration-300 hover:border-electric hover:text-electric">
+              <i data-lucide="play-circle" class="h-5 w-5"></i> Scopri i Servizi
+            </a>
+          </div>
+
+          <p class="reveal mt-7 text-sm text-gray-500">Un unico partner per sviluppo, strategia e competenze — <span class="font-semibold text-ink">dalla ricerca al risultato.</span></p>
+        </div>
+
+        <!-- Visual mockup -->
+        <div class="reveal relative">
+          <div class="floaty relative mx-auto max-w-md rounded-4xl border border-gray-100 bg-white p-4 shadow-card">
+            <!-- window bar -->
+            <div class="flex items-center gap-1.5 px-2 pb-3">
+              <span class="h-3 w-3 rounded-full bg-red-400"></span>
+              <span class="h-3 w-3 rounded-full bg-yellow-400"></span>
+              <span class="h-3 w-3 rounded-full bg-green-400"></span>
+              <span class="ml-3 text-xs font-medium text-gray-400">semplice.solutions / dashboard</span>
+            </div>
+            <div class="rounded-2xl bg-mist p-5">
+              <div class="flex items-center justify-between">
+                <div>
+                  <p class="text-xs font-medium text-gray-400">Efficienza dei processi</p>
+                  <p class="text-2xl font-extrabold text-ink">+47%</p>
+                </div>
+                <span class="grid h-10 w-10 place-items-center rounded-xl bg-electric text-white"><i data-lucide="trending-up" class="h-5 w-5"></i></span>
+              </div>
+              <!-- bars -->
+              <div class="mt-5 flex h-24 items-end gap-2">
+                <div class="w-full rounded-t-md bg-electric-100" style="height:38%"></div>
+                <div class="w-full rounded-t-md bg-electric-100" style="height:55%"></div>
+                <div class="w-full rounded-t-md bg-electric/60" style="height:48%"></div>
+                <div class="w-full rounded-t-md bg-electric/60" style="height:70%"></div>
+                <div class="w-full rounded-t-md bg-electric" style="height:85%"></div>
+                <div class="w-full rounded-t-md bg-electric" style="height:100%"></div>
+              </div>
+              <div class="mt-5 space-y-2">
+                <div class="flex items-center gap-3 rounded-xl bg-white p-3 shadow-ring">
+                  <span class="grid h-8 w-8 place-items-center rounded-lg bg-electric-50 text-electric"><i data-lucide="brain-circuit" class="h-4 w-4"></i></span>
+                  <div class="flex-1"><p class="text-xs font-semibold text-ink">Modello AI su misura</p><p class="text-[11px] text-gray-400">Attivo · in produzione</p></div>
+                  <span class="rounded-full bg-green-100 px-2 py-0.5 text-[10px] font-semibold text-green-700">Live</span>
+                </div>
+                <div class="flex items-center gap-3 rounded-xl bg-white p-3 shadow-ring">
+                  <span class="grid h-8 w-8 place-items-center rounded-lg bg-electric-50 text-electric"><i data-lucide="users" class="h-4 w-4"></i></span>
+                  <div class="flex-1"><p class="text-xs font-semibold text-ink">Team formato</p><p class="text-[11px] text-gray-400">12 persone · percorso completato</p></div>
+                  <span class="rounded-full bg-electric-50 px-2 py-0.5 text-[10px] font-semibold text-electric">100%</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- floating badge -->
+          <div class="absolute -left-4 bottom-8 hidden rounded-2xl border border-gray-100 bg-white px-4 py-3 shadow-card sm:block">
+            <p class="text-xs font-medium text-gray-400">Brevetti AI</p>
+            <p class="text-lg font-extrabold text-ink">1+ <span class="text-sm font-semibold text-electric">registrati</span></p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== MARQUEE CREDENZIALI ===================== -->
+  <section class="border-y border-gray-100 bg-white py-10">
+    <p class="mb-6 text-center text-sm font-semibold uppercase tracking-widest text-gray-400">Competenze al servizio della tua crescita</p>
+    <div class="marquee relative overflow-hidden">
+      <div class="pointer-events-none absolute inset-y-0 left-0 z-10 w-24 bg-gradient-to-r from-white to-transparent"></div>
+      <div class="pointer-events-none absolute inset-y-0 right-0 z-10 w-24 bg-gradient-to-l from-white to-transparent"></div>
+      <div class="marquee-track gap-12 px-6">
+        <!-- set 1 -->
+        <div class="flex shrink-0 items-center gap-12 text-gray-400">
+          <span class="flex items-center gap-2 text-lg font-bold"><i data-lucide="brain-circuit" class="h-5 w-5"></i> Machine Learning</span>
+          <span class="flex items-center gap-2 text-lg font-bold"><i data-lucide="messages-square" class="h-5 w-5"></i> NLP</span>
+          <span class="flex items-center gap-2 text-lg font-bold"><i data-lucide="scan-eye" class="h-5 w-5"></i> Computer Vision</span>
+          <span class="flex items-center gap-2 text-lg font-bold"><i data-lucide="sparkles" class="h-5 w-5"></i> Generative AI</span>
+          <span class="flex items-center gap-2 text-lg font-bold"><i data-lucide="server-cog" class="h-5 w-5"></i> MLOps</span>
+          <span class="flex items-center gap-2 text-lg font-bold"><i data-lucide="flask-conical" class="h-5 w-5"></i> Ricerca Applicata</span>
+        </div>
+        <!-- set 2 (duplicate) -->
+        <div class="flex shrink-0 items-center gap-12 text-gray-400" aria-hidden="true">
+          <span class="flex items-center gap-2 text-lg font-bold"><i data-lucide="brain-circuit" class="h-5 w-5"></i> Machine Learning</span>
+          <span class="flex items-center gap-2 text-lg font-bold"><i data-lucide="messages-square" class="h-5 w-5"></i> NLP</span>
+          <span class="flex items-center gap-2 text-lg font-bold"><i data-lucide="scan-eye" class="h-5 w-5"></i> Computer Vision</span>
+          <span class="flex items-center gap-2 text-lg font-bold"><i data-lucide="sparkles" class="h-5 w-5"></i> Generative AI</span>
+          <span class="flex items-center gap-2 text-lg font-bold"><i data-lucide="server-cog" class="h-5 w-5"></i> MLOps</span>
+          <span class="flex items-center gap-2 text-lg font-bold"><i data-lucide="flask-conical" class="h-5 w-5"></i> Ricerca Applicata</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== STATS BAND ===================== -->
+  <section id="risultati" class="relative overflow-hidden bg-mist py-20 lg:py-24">
+    <div class="pointer-events-none absolute -left-12 bottom-0 h-64 w-64 text-electric/10 dot-pattern"></div>
+    <div class="relative mx-auto max-w-7xl px-6 lg:px-8">
+      <div class="mx-auto mb-14 max-w-2xl text-center reveal">
+        <span class="text-sm font-semibold uppercase tracking-widest text-electric">Autorevolezza</span>
+        <h2 class="mt-3 text-3xl font-extrabold tracking-tight text-ink sm:text-4xl">La nostra ricerca scientifica al servizio della tua crescita aziendale.</h2>
+      </div>
+      <div class="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
+        <div class="reveal">
+          <div class="text-5xl font-extrabold tracking-tight text-electric lg:text-6xl"><span class="count" data-to="15">0</span>+</div>
+          <p class="mt-2 font-medium text-gray-600">Paper scientifici pubblicati</p>
+        </div>
+        <div class="reveal">
+          <div class="text-5xl font-extrabold tracking-tight text-electric lg:text-6xl"><span class="count" data-to="1">0</span>+</div>
+          <p class="mt-2 font-medium text-gray-600">Brevetti su AI registrati</p>
+        </div>
+        <div class="reveal">
+          <div class="text-5xl font-extrabold tracking-tight text-electric lg:text-6xl"><span class="count" data-to="100">0</span>%</div>
+          <p class="mt-2 font-medium text-gray-600">Soluzioni progettate su misura</p>
+        </div>
+        <div class="reveal">
+          <div class="text-5xl font-extrabold tracking-tight text-electric lg:text-6xl">3</div>
+          <p class="mt-2 font-medium text-gray-600">Aree: sviluppo, strategia, formazione</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== OPPORTUNITÀ (Il Gancio) ===================== -->
+  <section class="relative overflow-hidden bg-ink py-20 text-white lg:py-24">
+    <div class="pointer-events-none absolute right-0 top-0 h-72 w-72 text-electric/30 dot-pattern fade-mask-b"></div>
+    <div class="pointer-events-none absolute right-10 top-1/2 h-[360px] w-[420px] -translate-y-1/2 rounded-full bg-electric/20 blur-3xl"></div>
+    <div class="relative mx-auto max-w-5xl px-6 text-center lg:px-8">
+      <h2 class="reveal mx-auto max-w-3xl text-3xl font-extrabold leading-tight tracking-tight sm:text-4xl lg:text-5xl">
+        Vorresti utilizzare l'AI ma non sai da dove iniziare?
+      </h2>
+      <p class="reveal mx-auto mt-7 max-w-3xl text-lg leading-relaxed text-white/75">
+        Il mercato evolve rapidamente e l'Intelligenza Artificiale rappresenta la più grande opportunità competitiva di questa era. Offriamo la formazione e la consulenza personalizzata necessarie per colmare il divario tecnologico, mostrando fin da subito come l'AI può rivoluzionare il tuo business, riducendo i costi e massimizzando l'efficienza.
+      </p>
+      <div class="reveal mt-9">
+        <a href="#contatti" class="inline-flex items-center gap-2 rounded-full bg-white px-7 py-4 text-base font-semibold text-ink transition-all duration-300 hover:-translate-y-0.5 hover:bg-electric hover:text-white">
+          Parla con un esperto <i data-lucide="arrow-right" class="h-5 w-5"></i>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== SERVIZI — feature numerate alternate ===================== -->
+  <section id="servizi" class="relative bg-white py-24 lg:py-32">
+    <div class="mx-auto max-w-7xl px-6 lg:px-8">
+      <div class="reveal mx-auto max-w-2xl text-center">
+        <span class="text-sm font-semibold uppercase tracking-widest text-electric">Cosa Facciamo</span>
+        <h2 class="mt-3 text-3xl font-extrabold tracking-tight text-ink sm:text-4xl lg:text-5xl">Dall'idea all'autonomia, in un unico percorso</h2>
+        <p class="mt-5 text-lg text-gray-600">Tre aree integrate per portare l'Intelligenza Artificiale dentro il tuo business in modo concreto.</p>
+      </div>
+
+      <!-- Tabs -->
+      <div class="reveal mt-12 flex flex-wrap justify-center gap-2">
+        <button class="tab-btn tab-active rounded-full px-5 py-2.5 text-sm font-semibold transition" data-tab="0">Sviluppo AI</button>
+        <button class="tab-btn rounded-full bg-gray-100 px-5 py-2.5 text-sm font-semibold text-gray-600 transition hover:bg-gray-200" data-tab="1">Consulenza Strategica</button>
+        <button class="tab-btn rounded-full bg-gray-100 px-5 py-2.5 text-sm font-semibold text-gray-600 transition hover:bg-gray-200" data-tab="2">Formazione</button>
+      </div>
+
+      <div class="mt-16 space-y-20 lg:space-y-28">
+
+        <!-- 01 -->
+        <article class="feature reveal grid items-center gap-12 lg:grid-cols-2" data-feat="0">
+          <div>
+            <div class="flex items-center gap-3">
+              <span class="text-5xl font-extrabold text-electric/20">01</span>
+              <span class="grid h-12 w-12 place-items-center rounded-xl bg-electric-50 text-electric"><i data-lucide="cpu" class="h-6 w-6"></i></span>
+            </div>
+            <h3 class="mt-6 text-2xl font-bold text-ink sm:text-3xl">Sviluppo Tecnologia AI su Misura</h3>
+            <p class="mt-4 text-lg leading-relaxed text-gray-600">Progettiamo e implementiamo sistemi e algoritmi AI personalizzati, tra cui Machine Learning, elaborazione del linguaggio naturale (NLP) e visione artificiale. Risolviamo problemi complessi per migliorare radicalmente l'efficienza aziendale.</p>
+            <div class="mt-6 flex flex-wrap gap-2">
+              <span class="rounded-full bg-electric-50 px-3 py-1 text-sm font-medium text-electric">Machine Learning</span>
+              <span class="rounded-full bg-electric-50 px-3 py-1 text-sm font-medium text-electric">NLP</span>
+              <span class="rounded-full bg-electric-50 px-3 py-1 text-sm font-medium text-electric">Computer Vision</span>
+            </div>
+            <a href="#contatti" class="group mt-7 inline-flex items-center gap-2 font-semibold text-electric">Scopri di più <i data-lucide="arrow-right" class="h-4 w-4 transition-transform group-hover:translate-x-1"></i></a>
+          </div>
+          <div class="relative">
+            <div class="pointer-events-none absolute -right-6 -top-6 h-28 w-28 text-electric/10 dot-pattern"></div>
+            <div class="rounded-4xl border border-gray-100 bg-mist p-8 shadow-card">
+              <div class="rounded-2xl bg-white p-5 shadow-ring">
+                <div class="flex items-center justify-between text-xs font-medium text-gray-400"><span>model.train()</span><span class="text-green-600">● running</span></div>
+                <div class="mt-4 space-y-3">
+                  <div><div class="mb-1 flex justify-between text-xs text-gray-500"><span>Accuracy</span><span class="font-semibold text-ink">98.2%</span></div><div class="h-2 rounded-full bg-gray-100"><div class="h-2 rounded-full bg-electric" style="width:98%"></div></div></div>
+                  <div><div class="mb-1 flex justify-between text-xs text-gray-500"><span>Efficienza processo</span><span class="font-semibold text-ink">+47%</span></div><div class="h-2 rounded-full bg-gray-100"><div class="h-2 rounded-full bg-electric" style="width:74%"></div></div></div>
+                  <div><div class="mb-1 flex justify-between text-xs text-gray-500"><span>Costi operativi</span><span class="font-semibold text-ink">-31%</span></div><div class="h-2 rounded-full bg-gray-100"><div class="h-2 rounded-full bg-electric/60" style="width:62%"></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <!-- 02 -->
+        <article class="feature reveal hidden grid-cols-1 items-center gap-12 lg:grid-cols-2" data-feat="1">
+          <div class="lg:order-2">
+            <div class="flex items-center gap-3">
+              <span class="text-5xl font-extrabold text-electric/20">02</span>
+              <span class="grid h-12 w-12 place-items-center rounded-xl bg-electric-50 text-electric"><i data-lucide="compass" class="h-6 w-6"></i></span>
+            </div>
+            <h3 class="mt-6 text-2xl font-bold text-ink sm:text-3xl">Consulenza Strategica su AI</h3>
+            <p class="mt-4 text-lg leading-relaxed text-gray-600">Offriamo una guida personalizzata per l'implementazione e l'ottimizzazione delle soluzioni AI. Identifichiamo le migliori opportunità di crescita nella tua organizzazione, ottimizziamo i processi e supportiamo la trasformazione digitale.</p>
+            <a href="#contatti" class="group mt-7 inline-flex items-center gap-2 font-semibold text-electric">Scopri di più <i data-lucide="arrow-right" class="h-4 w-4 transition-transform group-hover:translate-x-1"></i></a>
+          </div>
+          <div class="relative lg:order-1">
+            <div class="pointer-events-none absolute -left-6 -top-6 h-28 w-28 text-electric/10 dot-pattern"></div>
+            <div class="rounded-4xl border border-gray-100 bg-mist p-8 shadow-card">
+              <div class="space-y-3">
+                <div class="flex items-center gap-3 rounded-2xl bg-white p-4 shadow-ring"><span class="grid h-9 w-9 place-items-center rounded-lg bg-electric text-white"><i data-lucide="target" class="h-4 w-4"></i></span><div class="flex-1"><p class="text-sm font-semibold text-ink">Opportunità individuate</p><p class="text-xs text-gray-400">Roadmap AI a 12 mesi</p></div><i data-lucide="check" class="h-5 w-5 text-green-500"></i></div>
+                <div class="flex items-center gap-3 rounded-2xl bg-white p-4 shadow-ring"><span class="grid h-9 w-9 place-items-center rounded-lg bg-electric-50 text-electric"><i data-lucide="git-branch" class="h-4 w-4"></i></span><div class="flex-1"><p class="text-sm font-semibold text-ink">Processi ottimizzati</p><p class="text-xs text-gray-400">5 flussi ridisegnati</p></div><i data-lucide="check" class="h-5 w-5 text-green-500"></i></div>
+                <div class="flex items-center gap-3 rounded-2xl bg-white p-4 shadow-ring"><span class="grid h-9 w-9 place-items-center rounded-lg bg-electric-50 text-electric"><i data-lucide="rocket" class="h-4 w-4"></i></span><div class="flex-1"><p class="text-sm font-semibold text-ink">Trasformazione digitale</p><p class="text-xs text-gray-400">In corso</p></div><span class="rounded-full bg-electric-50 px-2 py-0.5 text-[11px] font-semibold text-electric">68%</span></div>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <!-- 03 -->
+        <article class="feature reveal hidden grid-cols-1 items-center gap-12 lg:grid-cols-2" data-feat="2">
+          <div>
+            <div class="flex items-center gap-3">
+              <span class="text-5xl font-extrabold text-electric/20">03</span>
+              <span class="grid h-12 w-12 place-items-center rounded-xl bg-electric-50 text-electric"><i data-lucide="graduation-cap" class="h-6 w-6"></i></span>
+            </div>
+            <h3 class="mt-6 text-2xl font-bold text-ink sm:text-3xl">Formazione e Trasferimento Tecnologico</h3>
+            <p class="mt-4 text-lg leading-relaxed text-gray-600">Abilitiamo il tuo team all'utilizzo dell'Intelligenza Artificiale. Attraverso percorsi formativi dedicati e lezioni mirate, forniamo le competenze necessarie per rendere la tua azienda autonoma e competitiva nell'adozione di queste nuove tecnologie.</p>
+            <a href="#contatti" class="group mt-7 inline-flex items-center gap-2 font-semibold text-electric">Scopri di più <i data-lucide="arrow-right" class="h-4 w-4 transition-transform group-hover:translate-x-1"></i></a>
+          </div>
+          <div class="relative">
+            <div class="pointer-events-none absolute -right-6 -top-6 h-28 w-28 text-electric/10 dot-pattern"></div>
+            <div class="rounded-4xl border border-gray-100 bg-mist p-8 shadow-card">
+              <div class="rounded-2xl bg-white p-5 shadow-ring">
+                <div class="flex items-center justify-between"><p class="text-sm font-semibold text-ink">Percorso formativo</p><span class="rounded-full bg-green-100 px-2 py-0.5 text-[11px] font-semibold text-green-700">Completato</span></div>
+                <div class="mt-4 space-y-3">
+                  <div class="flex items-center gap-3"><span class="grid h-7 w-7 place-items-center rounded-full bg-electric text-white"><i data-lucide="check" class="h-4 w-4"></i></span><span class="text-sm text-gray-600">Fondamenti di AI per il business</span></div>
+                  <div class="flex items-center gap-3"><span class="grid h-7 w-7 place-items-center rounded-full bg-electric text-white"><i data-lucide="check" class="h-4 w-4"></i></span><span class="text-sm text-gray-600">Workshop pratici su casi reali</span></div>
+                  <div class="flex items-center gap-3"><span class="grid h-7 w-7 place-items-center rounded-full bg-electric-100 text-electric"><i data-lucide="circle-dot" class="h-4 w-4"></i></span><span class="text-sm text-gray-600">Autonomia operativa del team</span></div>
+                </div>
+                <div class="mt-5 h-2 rounded-full bg-gray-100"><div class="h-2 rounded-full bg-electric" style="width:88%"></div></div>
+                <p class="mt-2 text-right text-xs font-semibold text-electric">88% completato</p>
+              </div>
+            </div>
+          </div>
+        </article>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== PERCHÉ SCEGLIERCI ===================== -->
+  <section id="perche" class="relative overflow-hidden bg-mist py-24 lg:py-32">
+    <div class="pointer-events-none absolute right-0 top-1/3 h-72 w-72 text-electric/10 dot-pattern"></div>
+    <div class="relative mx-auto max-w-7xl px-6 lg:px-8">
+      <div class="reveal mx-auto max-w-2xl text-center">
+        <span class="text-sm font-semibold uppercase tracking-widest text-electric">Perché Sceglierci</span>
+        <h2 class="mt-3 text-3xl font-extrabold tracking-tight text-ink sm:text-4xl lg:text-5xl">Esperti, su misura, concreti</h2>
+      </div>
+      <div class="mt-16 grid gap-7 md:grid-cols-3">
+        <div class="reveal group rounded-4xl border border-gray-100 bg-white p-8 shadow-card transition-all duration-300 hover:-translate-y-1.5 hover:shadow-soft">
+          <div class="flex items-center gap-4"><span class="text-4xl font-extrabold text-electric/25">01</span><span class="grid h-12 w-12 place-items-center rounded-xl bg-electric-50 text-electric transition group-hover:bg-electric group-hover:text-white"><i data-lucide="puzzle" class="h-6 w-6"></i></span></div>
+          <h3 class="mt-6 text-xl font-bold text-ink">Soluzioni su Misura</h3>
+          <p class="mt-3 leading-relaxed text-gray-600">Non crediamo nei pacchetti preconfezionati. Sviluppiamo sistemi di AI unici, progettati specificamente per rispondere alle sfide e alle esigenze reali del tuo business.</p>
+        </div>
+        <div class="reveal group rounded-4xl border border-gray-100 bg-white p-8 shadow-card transition-all duration-300 hover:-translate-y-1.5 hover:shadow-soft">
+          <div class="flex items-center gap-4"><span class="text-4xl font-extrabold text-electric/25">02</span><span class="grid h-12 w-12 place-items-center rounded-xl bg-electric-50 text-electric transition group-hover:bg-electric group-hover:text-white"><i data-lucide="award" class="h-6 w-6"></i></span></div>
+          <h3 class="mt-6 text-xl font-bold text-ink">Esperienza Comprovata</h3>
+          <p class="mt-3 leading-relaxed text-gray-600">Il nostro team è composto da veri esperti nel campo dell'intelligenza artificiale, con un solido background nella ricerca scientifica e nello sviluppo di brevetti.</p>
+        </div>
+        <div class="reveal group rounded-4xl border border-gray-100 bg-white p-8 shadow-card transition-all duration-300 hover:-translate-y-1.5 hover:shadow-soft">
+          <div class="flex items-center gap-4"><span class="text-4xl font-extrabold text-electric/25">03</span><span class="grid h-12 w-12 place-items-center rounded-xl bg-electric-50 text-electric transition group-hover:bg-electric group-hover:text-white"><i data-lucide="rocket" class="h-6 w-6"></i></span></div>
+          <h3 class="mt-6 text-xl font-bold text-ink">Approccio Innovativo e Pratico</h3>
+          <p class="mt-3 leading-relaxed text-gray-600">Saper coniugare la teoria avanzata con la concretezza del business ci permette di abilitare una trasformazione digitale fluida, efficace e senza frizioni.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== TESTIMONIAL ===================== -->
+  <section class="bg-white py-24 lg:py-28">
+    <div class="mx-auto max-w-4xl px-6 text-center lg:px-8">
+      <i data-lucide="quote" class="reveal mx-auto h-10 w-10 text-electric/30"></i>
+      <blockquote class="reveal mt-6 text-2xl font-semibold leading-relaxed text-ink sm:text-3xl">
+        "Crediamo che l'AI non debba essere un concetto astratto o complesso, ma un motore concreto di crescita. Per questo accompagniamo le aziende passo dopo passo, dalla strategia all'autonomia."
+      </blockquote>
+      <div class="reveal mt-8 flex items-center justify-center gap-3">
+        <span class="grid h-12 w-12 place-items-center rounded-full bg-electric text-white font-bold">SS</span>
+        <div class="text-left"><p class="font-semibold text-ink">Il Team di Semplice Solutions</p><p class="text-sm text-gray-500">Ricerca · Sviluppo · Consulenza · Formazione</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== CTA + FORM + FOOTER ===================== -->
+  <section id="contatti" class="relative overflow-hidden bg-ink py-24 text-white lg:py-28">
+    <div class="pointer-events-none absolute -left-10 -top-10 h-80 w-80 text-electric/25 dot-pattern fade-mask-b"></div>
+    <div class="pointer-events-none absolute right-0 bottom-0 h-72 w-72 text-white/5 dot-pattern"></div>
+    <div class="pointer-events-none absolute right-0 top-0 h-[420px] w-[520px] rounded-full bg-electric/20 blur-3xl"></div>
+
+    <div class="relative mx-auto max-w-7xl px-6 lg:px-8">
+      <div class="grid gap-14 lg:grid-cols-2 lg:gap-20">
+        <div class="reveal">
+          <h2 class="text-3xl font-extrabold leading-tight tracking-tight sm:text-4xl lg:text-[2.6rem] lg:leading-[1.15]">
+            Inizia oggi la tua trasformazione digitale. Il futuro della tua azienda dipende dalle decisioni che prendi oggi.
+          </h2>
+          <p class="mt-6 max-w-lg text-lg leading-relaxed text-white/70">
+            Siamo pronti a rispondere alle tue domande e a costruire insieme la soluzione AI ideale per il tuo business. Parla con un nostro esperto.
+          </p>
+          <div class="mt-10 space-y-4">
+            <div class="flex items-center gap-3 text-white/80"><span class="grid h-10 w-10 place-items-center rounded-lg bg-white/10"><i data-lucide="mail" class="h-5 w-5"></i></span><span>info@semplice.solutions</span></div>
+            <div class="flex items-center gap-3 text-white/80"><span class="grid h-10 w-10 place-items-center rounded-lg bg-white/10"><i data-lucide="map-pin" class="h-5 w-5"></i></span><span>Italia · Soluzioni AI per il business</span></div>
+          </div>
+        </div>
+
+        <div class="reveal">
+          <form class="rounded-4xl border border-white/10 bg-white p-7 text-ink shadow-2xl sm:p-9" onsubmit="event.preventDefault(); this.reset(); document.getElementById('formOk').classList.remove('hidden');">
+            <h3 class="text-xl font-bold">Parla con un esperto</h3>
+            <p class="mt-1 text-sm text-gray-500">Ti rispondiamo entro 24 ore.</p>
+            <div class="mt-6 space-y-5">
+              <div><label for="nome" class="mb-1.5 block text-sm font-semibold">Nome</label><input id="nome" type="text" required placeholder="Il tuo nome" class="w-full rounded-xl border border-gray-200 bg-mist px-4 py-3 text-sm outline-none transition focus:border-electric focus:bg-white focus:ring-4 focus:ring-electric/10" /></div>
+              <div><label for="email" class="mb-1.5 block text-sm font-semibold">Email Aziendale</label><input id="email" type="email" required placeholder="nome@azienda.com" class="w-full rounded-xl border border-gray-200 bg-mist px-4 py-3 text-sm outline-none transition focus:border-electric focus:bg-white focus:ring-4 focus:ring-electric/10" /></div>
+              <div><label for="msg" class="mb-1.5 block text-sm font-semibold">Come possiamo aiutarti?</label><textarea id="msg" rows="4" required placeholder="Raccontaci la tua sfida o il tuo obiettivo…" class="w-full resize-none rounded-xl border border-gray-200 bg-mist px-4 py-3 text-sm outline-none transition focus:border-electric focus:bg-white focus:ring-4 focus:ring-electric/10"></textarea></div>
+            </div>
+            <button type="submit" class="group mt-7 inline-flex w-full items-center justify-center gap-2 rounded-full bg-electric px-6 py-4 text-base font-semibold text-white shadow-soft transition-all duration-300 hover:-translate-y-0.5 hover:bg-electric-600">
+              Invia la Richiesta <i data-lucide="send" class="h-4 w-4 transition-transform group-hover:translate-x-1"></i>
+            </button>
+            <p id="formOk" class="hidden mt-4 flex items-center gap-2 rounded-lg bg-electric-50 px-4 py-3 text-sm font-medium text-electric"><i data-lucide="check-circle-2" class="h-4 w-4"></i> Grazie! La tua richiesta è stata registrata.</p>
+          </form>
+        </div>
+      </div>
+
+      <!-- Footer columns -->
+      <div class="mt-20 grid gap-10 border-t border-white/10 pt-12 sm:grid-cols-2 lg:grid-cols-4">
+        <div>
+          <a href="#top" class="flex items-center gap-2 text-base font-extrabold"><span class="grid h-7 w-7 place-items-center rounded-lg bg-electric text-white"><i data-lucide="sparkles" class="h-3.5 w-3.5"></i></span>Semplice<span class="text-electric">.</span>Solutions</a>
+          <p class="mt-4 max-w-xs text-sm text-white/55">L'Intelligenza Artificiale resa semplice: sviluppo, consulenza e formazione per la crescita del tuo business.</p>
+        </div>
+        <div>
+          <h4 class="text-sm font-semibold text-white/90">Servizi</h4>
+          <ul class="mt-4 space-y-2 text-sm text-white/55">
+            <li><a href="#servizi" class="hover:text-electric-100">Sviluppo AI su Misura</a></li>
+            <li><a href="#servizi" class="hover:text-electric-100">Consulenza Strategica</a></li>
+            <li><a href="#servizi" class="hover:text-electric-100">Formazione</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4 class="text-sm font-semibold text-white/90">Azienda</h4>
+          <ul class="mt-4 space-y-2 text-sm text-white/55">
+            <li><a href="#perche" class="hover:text-electric-100">Perché Sceglierci</a></li>
+            <li><a href="#risultati" class="hover:text-electric-100">Risultati</a></li>
+            <li><a href="#contatti" class="hover:text-electric-100">Contatti</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4 class="text-sm font-semibold text-white/90">Resta aggiornato</h4>
+          <p class="mt-4 text-sm text-white/55">Novità su AI e business, senza spam.</p>
+          <a href="#contatti" class="mt-4 inline-flex items-center gap-2 rounded-full border border-white/20 px-4 py-2 text-sm font-semibold text-white hover:border-electric hover:text-electric-100">Iscriviti <i data-lucide="arrow-right" class="h-4 w-4"></i></a>
+        </div>
+      </div>
+
+      <div class="mt-10 flex flex-col items-center justify-between gap-3 border-t border-white/10 pt-6 text-sm text-white/50 sm:flex-row">
+        <p>© 2026 Semplice Solutions. Tutti i diritti riservati.</p>
+        <div class="flex gap-6"><a href="#" class="hover:text-white">Privacy</a><a href="#" class="hover:text-white">Termini</a><a href="#" class="hover:text-white">Cookie</a></div>
+      </div>
+    </div>
+  </section>
+
+  <script>
+    lucide.createIcons();
+
+    // Mobile menu
+    const menuBtn = document.getElementById('menuBtn');
+    const mobileMenu = document.getElementById('mobileMenu');
+    menuBtn.addEventListener('click', () => mobileMenu.classList.toggle('hidden'));
+    mobileMenu.querySelectorAll('a').forEach(a => a.addEventListener('click', () => mobileMenu.classList.add('hidden')));
+
+    // Tabs servizi
+    const tabs = document.querySelectorAll('.tab-btn');
+    const feats = document.querySelectorAll('.feature');
+    tabs.forEach(t => t.addEventListener('click', () => {
+      const i = t.dataset.tab;
+      tabs.forEach(x => { x.classList.remove('tab-active'); x.classList.add('bg-gray-100','text-gray-600'); });
+      t.classList.add('tab-active'); t.classList.remove('bg-gray-100','text-gray-600');
+      feats.forEach(f => {
+        if (f.dataset.feat === i) { f.classList.remove('hidden'); f.classList.add('grid','in'); }
+        else { f.classList.add('hidden'); f.classList.remove('grid'); }
+      });
+    }));
+
+    // Reveal
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } });
+    }, { threshold: 0.12 });
+    document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+
+    // Counters
+    const counters = document.querySelectorAll('.count');
+    const cio = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (!e.isIntersecting) return;
+        const el = e.target, to = +el.dataset.to; let cur = 0;
+        const step = Math.max(1, Math.round(to / 30));
+        const tick = () => { cur += step; if (cur >= to) { el.textContent = to; } else { el.textContent = cur; requestAnimationFrame(tick); } };
+        tick(); cio.unobserve(el);
+      });
+    }, { threshold: 0.5 });
+    counters.forEach(c => cio.observe(c));
+  </script>
+</body>
+</html>
