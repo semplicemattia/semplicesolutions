@@ -1,0 +1,625 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<title>Dot Loop Generator</title>
+<style>
+  :root{
+    --bg: #121212;
+    --panel: #1a1a1a;
+    --panel-border: #2a2a2a;
+    --text: #eeeeee;
+    --text-dim: #8a8a8a;
+    --accent: #ff3d1a;
+    --accent-dim: #ff3d1a33;
+    --radius: 10px;
+  }
+  *{box-sizing:border-box;}
+  html,body{
+    margin:0;
+    background:var(--bg);
+    color:var(--text);
+    font-family:-apple-system,BlinkMacSystemFont,"Inter","Helvetica Neue",Arial,sans-serif;
+    height:100%;
+  }
+  .app{
+    display:grid;
+    grid-template-columns: 340px 1fr;
+    gap:0;
+    min-height:100vh;
+  }
+  @media (max-width: 860px){
+    .app{grid-template-columns: 1fr;}
+  }
+
+  /* Sidebar */
+  .sidebar{
+    background:var(--panel);
+    border-right:1px solid var(--panel-border);
+    padding:24px;
+    overflow-y:auto;
+    max-height:100vh;
+  }
+  .brand{
+    display:flex;
+    align-items:baseline;
+    gap:8px;
+    margin-bottom:4px;
+  }
+  .brand .dot{
+    width:9px;height:9px;border-radius:50%;
+    background:var(--accent);
+    display:inline-block;
+  }
+  h1{
+    font-size:15px;
+    font-weight:600;
+    letter-spacing:0.02em;
+    margin:0;
+  }
+  .subtitle{
+    font-size:12px;
+    color:var(--text-dim);
+    margin:2px 0 22px 17px;
+  }
+  .group{
+    margin-bottom:22px;
+  }
+  .group-label{
+    font-size:11px;
+    text-transform:uppercase;
+    letter-spacing:0.08em;
+    color:var(--text-dim);
+    margin-bottom:10px;
+    font-weight:600;
+  }
+  .seg{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:6px;
+  }
+  .seg button{
+    background:#101010;
+    border:1px solid var(--panel-border);
+    color:var(--text-dim);
+    font-size:11px;
+    padding:8px 4px;
+    border-radius:7px;
+    cursor:pointer;
+    transition:all .15s ease;
+  }
+  .seg button:hover{ color:var(--text); border-color:#3a3a3a; }
+  .seg button.active{
+    background:var(--accent-dim);
+    border-color:var(--accent);
+    color:#fff;
+  }
+  .row{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:10px;
+    margin-bottom:12px;
+  }
+  .row label{
+    font-size:12.5px;
+    color:var(--text);
+    flex-shrink:0;
+  }
+  .row .val{
+    font-size:11px;
+    color:var(--text-dim);
+    min-width:34px;
+    text-align:right;
+  }
+  input[type=range]{
+    flex:1;
+    accent-color:var(--accent);
+  }
+  input[type=color]{
+    -webkit-appearance:none;
+    width:36px;height:24px;
+    border:1px solid var(--panel-border);
+    border-radius:6px;
+    padding:0;
+    background:none;
+    cursor:pointer;
+  }
+  .swatches{
+    display:flex;
+    gap:6px;
+    margin-bottom:10px;
+    flex-wrap:wrap;
+  }
+  .swatch{
+    width:20px;height:20px;
+    border-radius:50%;
+    border:2px solid transparent;
+    cursor:pointer;
+  }
+  .swatch.active{ border-color:#fff; }
+
+  .divider{
+    height:1px;
+    background:var(--panel-border);
+    margin:22px 0;
+  }
+
+  .record-panel{
+    background:#101010;
+    border:1px solid var(--panel-border);
+    border-radius:var(--radius);
+    padding:16px;
+  }
+  .record-panel .row{margin-bottom:10px;}
+  .btn{
+    width:100%;
+    padding:11px;
+    border-radius:8px;
+    border:none;
+    font-size:13px;
+    font-weight:600;
+    cursor:pointer;
+    transition:all .15s ease;
+  }
+  .btn-primary{
+    background:var(--accent);
+    color:#fff;
+  }
+  .btn-primary:hover{ filter:brightness(1.08); }
+  .btn-primary:disabled{
+    background:#3a3a3a;
+    color:#777;
+    cursor:not-allowed;
+  }
+  .btn-ghost{
+    background:transparent;
+    border:1px solid var(--panel-border);
+    color:var(--text-dim);
+    margin-top:8px;
+  }
+  .btn-ghost:hover{ color:var(--text); border-color:#3a3a3a; }
+  .status{
+    font-size:11px;
+    color:var(--text-dim);
+    text-align:center;
+    margin-top:8px;
+    min-height:14px;
+  }
+  .hint{
+    font-size:11px;
+    color:var(--text-dim);
+    line-height:1.5;
+    margin-top:6px;
+  }
+
+  /* Preview */
+  .preview{
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    padding:40px;
+    gap:18px;
+  }
+  .canvas-wrap{
+    border-radius:14px;
+    overflow:hidden;
+    box-shadow:0 20px 60px rgba(0,0,0,0.5);
+    line-height:0;
+  }
+  canvas{
+    display:block;
+  }
+  .size-toggle{
+    display:flex;
+    gap:6px;
+    background:var(--panel);
+    border:1px solid var(--panel-border);
+    padding:4px;
+    border-radius:9px;
+  }
+  .size-toggle button{
+    background:none;
+    border:none;
+    color:var(--text-dim);
+    font-size:11px;
+    padding:6px 12px;
+    border-radius:6px;
+    cursor:pointer;
+  }
+  .size-toggle button.active{
+    background:#2a2a2a;
+    color:#fff;
+  }
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="sidebar">
+    <div class="brand"><span class="dot"></span><h1>Dot Loop Generator</h1></div>
+    <div class="subtitle">crea loop animati di pallini per il tuo sito</div>
+
+    <div class="group">
+      <div class="group-label">Forma del contenitore</div>
+      <div class="seg" id="shapeSeg">
+        <button data-v="circle" class="active">Cerchio</button>
+        <button data-v="square">Quadrato</button>
+        <button data-v="rect">Rettangolo</button>
+      </div>
+    </div>
+
+    <div class="group">
+      <div class="group-label">Movimento</div>
+      <div class="seg" id="motionSeg" style="grid-template-columns:repeat(2,1fr);">
+        <button data-v="ripple" class="active">Onda / Ripple</button>
+        <button data-v="vortex">Rotazione</button>
+        <button data-v="breathe">Respiro</button>
+        <button data-v="noise">Turbolenza</button>
+        <button data-v="wave">Onda diagonale</button>
+        <button data-v="orbit">Orbita</button>
+        <button data-v="spiral">Spirale</button>
+        <button data-v="scan">Scansione</button>
+        <button data-v="magnet">Magnete</button>
+        <button data-v="checker">Scacchiera</button>
+        <button data-v="radial">Onde radiali</button>
+        <button data-v="twinkle">Sfarfallio</button>
+        <button data-v="diamond">Onda a rombo</button>
+        <button data-v="rings">Anelli pulsanti</button>
+      </div>
+    </div>
+
+    <div class="group">
+      <div class="row"><label>Cicli per loop</label><span class="val" id="speedVal">2</span></div>
+      <input type="range" id="speed" min="1" max="8" step="1" value="2">
+      <div class="hint" style="margin-top:-4px;margin-bottom:14px;">Numero di ripetizioni del movimento all'interno di un loop: sempre un numero intero, cosÃ¬ il loop si chiude sempre in modo perfetto, senza scatti.</div>
+
+      <div class="row"><label>IntensitÃ  movimento</label><span class="val" id="ampVal">50%</span></div>
+      <input type="range" id="amp" min="5" max="100" step="1" value="50">
+
+      <div class="row"><label>DensitÃ  griglia</label><span class="val" id="densVal">14</span></div>
+      <input type="range" id="density" min="6" max="24" step="1" value="14">
+
+      <div class="row"><label>Copertura area</label><span class="val" id="covVal">42%</span></div>
+      <input type="range" id="coverage" min="15" max="50" step="1" value="42">
+
+      <div class="row"><label>Dimensione pallini</label><span class="val" id="dotSizeVal">6</span></div>
+      <input type="range" id="dotSize" min="2" max="14" step="1" value="6">
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="group">
+      <div class="group-label">Colore pallini</div>
+      <div class="swatches" id="dotSwatches">
+        <span class="swatch active" style="background:#0f0f0f" data-c="#0f0f0f"></span>
+        <span class="swatch" style="background:#ffffff" data-c="#ffffff"></span>
+        <span class="swatch" style="background:#ff3d1a" data-c="#ff3d1a"></span>
+        <span class="swatch" style="background:#ffd166" data-c="#ffd166"></span>
+        <span class="swatch" style="background:#06d6a0" data-c="#06d6a0"></span>
+      </div>
+      <input type="color" id="dotColor" value="#0f0f0f">
+    </div>
+
+    <div class="group">
+      <div class="group-label">Colore sfondo</div>
+      <div class="swatches" id="bgSwatches">
+        <span class="swatch active" style="background:#ff431c" data-c="#ff431c"></span>
+        <span class="swatch" style="background:#0f0f0f" data-c="#0f0f0f"></span>
+        <span class="swatch" style="background:#f4f1ea" data-c="#f4f1ea"></span>
+        <span class="swatch" style="background:#1b1b3a" data-c="#1b1b3a"></span>
+        <span class="swatch" style="background:transparent;border:1px dashed #666" data-c="transparent" title="trasparente"></span>
+      </div>
+      <input type="color" id="bgColor" value="#ff431c">
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="record-panel">
+      <div class="group-label" style="margin-bottom:12px;">Esporta video loop</div>
+      <div class="row"><label>QualitÃ </label></div>
+      <div class="seg" id="qualitySeg" style="margin-bottom:12px;">
+        <button data-v="1">Standard</button>
+        <button data-v="2" class="active">Alta</button>
+        <button data-v="3">Ultra HD</button>
+      </div>
+      <div class="row"><label>Durata loop</label><span class="val" id="durVal">3s</span></div>
+      <input type="range" id="duration" min="1" max="8" step="0.5" value="3">
+      <button class="btn btn-primary" id="recordBtn">Registra e scarica (.webm)</button>
+      <div class="status" id="status"></div>
+      <div class="hint">Il loop Ã¨ calcolato per chiudersi perfettamente: l'ultimo fotogramma si ricongiunge al primo. Usa Chrome per l'esportazione.</div>
+    </div>
+  </div>
+
+  <div class="preview">
+    <div class="size-toggle" id="sizeToggle">
+      <button data-s="500" class="active">Quadrato 500</button>
+      <button data-s="wide">Widescreen</button>
+      <button data-s="tall">Verticale</button>
+    </div>
+    <div class="canvas-wrap">
+      <canvas id="cv" width="500" height="500"></canvas>
+    </div>
+  </div>
+</div>
+
+<script>
+const cv = document.getElementById('cv');
+const ctx = cv.getContext('2d');
+
+let state = {
+  shape:'circle',
+  motion:'ripple',
+  speed:2,
+  amp:50,
+  density:14,
+  coverage:42,
+  dotSize:6,
+  dotColor:'#0f0f0f',
+  bgColor:'#ff431c',
+  bgTransparent:false,
+  duration:3,
+  quality:2,
+  canvasSize:{w:500,h:500}
+};
+
+function resizeCanvas(){
+  const q = state.quality;
+  cv.width = state.canvasSize.w * q;
+  cv.height = state.canvasSize.h * q;
+  cv.style.width = state.canvasSize.w + 'px';
+  cv.style.height = state.canvasSize.h + 'px';
+}
+
+// ---- UI wiring ----
+function segWire(id, key, cb){
+  const el = document.getElementById(id);
+  el.querySelectorAll('button').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      el.querySelectorAll('button').forEach(b=>b.classList.remove('active'));
+      btn.classList.add('active');
+      state[key] = btn.dataset.v;
+      if(cb) cb();
+    });
+  });
+}
+segWire('shapeSeg','shape');
+segWire('motionSeg','motion');
+
+function sliderWire(id, key, valId, fmt){
+  const el = document.getElementById(id);
+  const valEl = document.getElementById(valId);
+  el.addEventListener('input', ()=>{
+    state[key] = parseFloat(el.value);
+    valEl.textContent = fmt ? fmt(state[key]) : el.value;
+  });
+}
+sliderWire('speed','speed','speedVal', v=>Math.round(v));
+sliderWire('amp','amp','ampVal', v=>v+'%');
+sliderWire('density','density','densVal', v=>v);
+sliderWire('coverage','coverage','covVal', v=>v+'%');
+sliderWire('dotSize','dotSize','dotSizeVal', v=>v);
+sliderWire('duration','duration','durVal', v=>v+'s');
+
+function swatchWire(id, colorInputId, key){
+  const wrap = document.getElementById(id);
+  const colorInput = document.getElementById(colorInputId);
+  wrap.querySelectorAll('.swatch').forEach(sw=>{
+    sw.addEventListener('click', ()=>{
+      wrap.querySelectorAll('.swatch').forEach(s=>s.classList.remove('active'));
+      sw.classList.add('active');
+      const c = sw.dataset.c;
+      if(c === 'transparent'){
+        state.bgTransparent = true;
+      } else {
+        state.bgTransparent = false;
+        state[key] = c;
+        colorInput.value = c;
+      }
+    });
+  });
+  colorInput.addEventListener('input', ()=>{
+    wrap.querySelectorAll('.swatch').forEach(s=>s.classList.remove('active'));
+    state[key] = colorInput.value;
+    state.bgTransparent = false;
+  });
+}
+swatchWire('dotSwatches','dotColor','dotColor');
+swatchWire('bgSwatches','bgColor','bgColor');
+
+document.getElementById('sizeToggle').querySelectorAll('button').forEach(btn=>{
+  btn.addEventListener('click', ()=>{
+    document.getElementById('sizeToggle').querySelectorAll('button').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    const s = btn.dataset.s;
+    if(s==='500'){ state.canvasSize={w:500,h:500}; }
+    else if(s==='wide'){ state.canvasSize={w:640,h:360}; }
+    else if(s==='tall'){ state.canvasSize={w:360,h:640}; }
+    resizeCanvas();
+  });
+});
+
+document.getElementById('qualitySeg').querySelectorAll('button').forEach(btn=>{
+  btn.addEventListener('click', ()=>{
+    document.getElementById('qualitySeg').querySelectorAll('button').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    state.quality = parseInt(btn.dataset.v);
+    resizeCanvas();
+  });
+});
+
+resizeCanvas();
+
+// ---- Drawing ----
+function isInsideShape(nx, ny, shape){
+  // nx, ny in range [-1, 1] relative to grid bounds
+  if(shape === 'circle'){
+    return (nx*nx + ny*ny) <= 1;
+  } else if(shape === 'square'){
+    return Math.abs(nx) <= 1 && Math.abs(ny) <= 1;
+  } else if(shape === 'rect'){
+    return Math.abs(nx) <= 1 && Math.abs(ny) <= 0.6;
+  }
+  return true;
+}
+
+function drawFrame(tSeconds){
+  const w = cv.width, h = cv.height;
+  ctx.clearRect(0,0,w,h);
+  if(!state.bgTransparent){
+    ctx.fillStyle = state.bgColor;
+    ctx.fillRect(0,0,w,h);
+  }
+
+  const period = state.duration; // seconds for a perfect loop
+  const phase = (tSeconds % period) / period; // 0..1
+  const twoPi = Math.PI * 2;
+  const angle = phase * twoPi * state.speed; // speed = integer cycles, guarantees perfect loop closure
+
+  const cx = w/2, cy = h/2;
+  const minDim = Math.min(w,h);
+  const q = state.quality;
+  const gridRadius = minDim * (state.coverage/100);
+  const n = state.density;
+  const spacing = (gridRadius*2) / (n-1);
+  const amp = (state.amp/100) * spacing * 0.9;
+
+  ctx.fillStyle = state.dotColor;
+
+  for(let i=0;i<n;i++){
+    for(let j=0;j<n;j++){
+      const gx = -gridRadius + i*spacing;
+      const gy = -gridRadius + j*spacing;
+      const nx = gx/gridRadius, ny = gy/gridRadius;
+      if(!isInsideShape(nx, ny, state.shape)) continue;
+
+      let dx=0, dy=0, scale=1;
+      const dist = Math.sqrt(nx*nx+ny*ny);
+      // hash: stable pseudo-random 0..1 per grid cell (time-independent, safe for looping)
+      const hash = (Math.sin(i*12.9898 + j*78.233) * 43758.5453) % 1;
+      const rnd = hash < 0 ? hash + 1 : hash;
+
+      if(state.motion === 'ripple'){
+        const wv = Math.sin(dist*6 - angle);
+        scale = 1 + 0.5*wv*(amp/spacing);
+      } else if(state.motion === 'vortex'){
+        // concentric rings, each rotating at an INTEGER multiple of the base cycle -> always closes perfectly
+        const ring = Math.floor(dist*4); // 0..3
+        const rot = angle * (1 + ring);
+        const cosr = Math.cos(rot), sinr = Math.sin(rot);
+        dx = (gx*cosr - gy*sinr) - gx;
+        dy = (gx*sinr + gy*cosr) - gy;
+      } else if(state.motion === 'breathe'){
+        const s = 1 + 0.35*(amp/spacing/2)*Math.sin(angle - dist*2);
+        scale = s;
+      } else if(state.motion === 'noise'){
+        dx = amp*Math.sin(angle + gx*0.15 + gy*0.05);
+        dy = amp*Math.cos(angle + gy*0.15 - gx*0.05 + Math.PI/2);
+      } else if(state.motion === 'wave'){
+        const wv = Math.sin((gx+gy)*0.08 + angle);
+        dy = amp*wv;
+      } else if(state.motion === 'orbit'){
+        const baseAngle = Math.atan2(gy,gx);
+        const localAmp = (amp/spacing) * spacing * 0.4;
+        dx = Math.cos(baseAngle + angle) * localAmp * (0.3+dist*0.7) - Math.cos(baseAngle)*localAmp*(0.3+dist*0.7);
+        dy = Math.sin(baseAngle + angle) * localAmp * (0.3+dist*0.7) - Math.sin(baseAngle)*localAmp*(0.3+dist*0.7);
+      } else if(state.motion === 'spiral'){
+        const baseAngle = Math.atan2(gy,gx);
+        const rr = dist*gridRadius + amp*Math.sin(angle + dist*6);
+        const na = baseAngle + angle;
+        dx = Math.cos(na)*rr - gx;
+        dy = Math.sin(na)*rr - gy;
+      } else if(state.motion === 'scan'){
+        const sweep = Math.sin(angle) * gridRadius;
+        const d = Math.abs(gx - sweep);
+        const falloff = Math.max(0, 1 - d/(gridRadius*0.35));
+        scale = 1 + falloff*1.8;
+      } else if(state.motion === 'magnet'){
+        // lissajous 1:2 path -> integer frequency ratio, closes perfectly
+        const mx = Math.cos(angle)*gridRadius*0.6;
+        const my = Math.sin(angle*2)*gridRadius*0.35;
+        const ddx = mx-gx, ddy = my-gy;
+        const dd = Math.sqrt(ddx*ddx+ddy*ddy)+0.001;
+        const pull = Math.min(1, (amp*2)/dd);
+        dx = ddx*pull*0.5;
+        dy = ddy*pull*0.5;
+      } else if(state.motion === 'checker'){
+        const cellPhase = Math.sin(angle + (i+j)*0.9);
+        scale = 1 + 0.6*(amp/spacing)*cellPhase;
+      } else if(state.motion === 'radial'){
+        // radial push/pull wave: displaces each dot outward/inward along its own radius
+        const dr = amp*1.4*Math.sin(dist*7 - angle);
+        dx = (dist>0.001? gx/(dist*gridRadius) : 0) * dr;
+        dy = (dist>0.001? gy/(dist*gridRadius) : 0) * dr;
+      } else if(state.motion === 'twinkle'){
+        const phaseOffset = rnd*twoPi;
+        scale = 1 + 0.55*(amp/spacing)*Math.sin(angle + phaseOffset);
+      } else if(state.motion === 'diamond'){
+        const wv = Math.sin((Math.abs(gx)+Math.abs(gy))*0.07 + angle);
+        scale = 1 + 0.5*wv*(amp/spacing);
+      } else if(state.motion === 'rings'){
+        const ring = Math.round(dist*8);
+        const wv = Math.sin(angle + ring*0.9);
+        scale = 1 + 0.55*(amp/spacing)*wv;
+      }
+
+      const px = cx + gx + dx;
+      const py = cy + gy + dy;
+      const r = Math.max(0.5*q, (state.dotSize/2) * q * scale);
+
+      ctx.beginPath();
+      ctx.arc(px, py, r, 0, twoPi);
+      ctx.fill();
+    }
+  }
+}
+
+let startTime = performance.now();
+function loop(now){
+  const t = (now - startTime)/1000;
+  drawFrame(t);
+  requestAnimationFrame(loop);
+}
+requestAnimationFrame(loop);
+
+// ---- Recording ----
+const recordBtn = document.getElementById('recordBtn');
+const statusEl = document.getElementById('status');
+
+recordBtn.addEventListener('click', async ()=>{
+  if(!cv.captureStream){
+    statusEl.textContent = 'Il tuo browser non supporta l\'esportazione. Prova con Chrome.';
+    return;
+  }
+  recordBtn.disabled = true;
+  const fps = 30;
+  const durationMs = state.duration * 1000;
+  const stream = cv.captureStream(fps);
+  let mimeType = 'video/webm;codecs=vp9';
+  if(!MediaRecorder.isTypeSupported(mimeType)) mimeType = 'video/webm';
+  const bitrateByQuality = {1: 8_000_000, 2: 18_000_000, 3: 32_000_000};
+  const recorder = new MediaRecorder(stream, {mimeType, videoBitsPerSecond: bitrateByQuality[state.quality] || 18_000_000});
+  const chunks = [];
+  recorder.ondataavailable = e=>{ if(e.data.size>0) chunks.push(e.data); };
+  recorder.onstop = ()=>{
+    const blob = new Blob(chunks, {type:'video/webm'});
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `dot-loop-${state.shape}-${state.motion}.webm`;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    statusEl.textContent = 'Scaricato â â riprova con un\'altra combinazione per il prossimo loop.';
+    recordBtn.disabled = false;
+  };
+
+  // restart the loop cleanly at phase 0 for a clean export
+  startTime = performance.now();
+  statusEl.textContent = 'Registrazione in corso...';
+  recorder.start();
+  setTimeout(()=>{ recorder.stop(); }, durationMs);
+});
+</script>
+</body>
+</html>
