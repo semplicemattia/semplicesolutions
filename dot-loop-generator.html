@@ -272,12 +272,12 @@
     <div class="group">
       <div class="row"><label>Cicli per loop</label><span class="val" id="speedVal">2</span></div>
       <input type="range" id="speed" min="1" max="8" step="1" value="2">
-      <div class="hint" style="margin-top:-4px;margin-bottom:14px;">Numero di ripetizioni del movimento all'interno di un loop: sempre un numero intero, cosÃ¬ il loop si chiude sempre in modo perfetto, senza scatti.</div>
+      <div class="hint" style="margin-top:-4px;margin-bottom:14px;">Numero di ripetizioni del movimento all'interno di un loop: sempre un numero intero, così il loop si chiude sempre in modo perfetto, senza scatti.</div>
 
-      <div class="row"><label>IntensitÃ  movimento</label><span class="val" id="ampVal">50%</span></div>
+      <div class="row"><label>Intensità movimento</label><span class="val" id="ampVal">50%</span></div>
       <input type="range" id="amp" min="5" max="100" step="1" value="50">
 
-      <div class="row"><label>DensitÃ  griglia</label><span class="val" id="densVal">14</span></div>
+      <div class="row"><label>Densità griglia</label><span class="val" id="densVal">14</span></div>
       <input type="range" id="density" min="6" max="24" step="1" value="14">
 
       <div class="row"><label>Copertura area</label><span class="val" id="covVal">42%</span></div>
@@ -317,7 +317,7 @@
 
     <div class="record-panel">
       <div class="group-label" style="margin-bottom:12px;">Esporta video loop</div>
-      <div class="row"><label>QualitÃ </label></div>
+      <div class="row"><label>Qualità</label></div>
       <div class="seg" id="qualitySeg" style="margin-bottom:12px;">
         <button data-v="1">Standard</button>
         <button data-v="2" class="active">Alta</button>
@@ -327,7 +327,7 @@
       <input type="range" id="duration" min="1" max="8" step="0.5" value="3">
       <button class="btn btn-primary" id="recordBtn">Registra e scarica (.webm)</button>
       <div class="status" id="status"></div>
-      <div class="hint">Il loop Ã¨ calcolato per chiudersi perfettamente: l'ultimo fotogramma si ricongiunge al primo. Usa Chrome per l'esportazione.</div>
+      <div class="hint">Il loop è calcolato per chiudersi perfettamente: l'ultimo fotogramma si ricongiunge al primo. Usa Chrome per l'esportazione.</div>
     </div>
   </div>
 
@@ -610,7 +610,7 @@ recordBtn.addEventListener('click', async ()=>{
     document.body.appendChild(a);
     a.click();
     a.remove();
-    statusEl.textContent = 'Scaricato â â riprova con un\'altra combinazione per il prossimo loop.';
+    statusEl.textContent = 'Scaricato ✓ — riprova con un\'altra combinazione per il prossimo loop.';
     recordBtn.disabled = false;
   };
 
